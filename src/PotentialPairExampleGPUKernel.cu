@@ -2,7 +2,7 @@
 // Part of HOOMD-blue, released under the BSD 3-Clause License.
 
 #include "EvaluatorPairExample.h"
-#include "hoomd/md/PotentialPairGPU.cuh"
+#include "hoomd/md/PotentialPairGPUCustom.cuh"
 
 namespace hoomd
     {

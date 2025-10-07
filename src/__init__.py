@@ -6,5 +6,7 @@
 
 from . import version
 from .pair import ExamplePair
+from .bond import ActiveBond
 
-__all__ = ['ExamplePair']
+# ...
+__all__ = ['ExamplePair', 'ActiveBond'] # Add 'ActiveBond'

@@ -1,20 +1,25 @@
 # TODO: Set COMPONENT_NAME to the name of your Python package.
-set(COMPONENT_NAME template)
+set(COMPONENT_NAME active)
 
 # TODO: List all host C++ source code files in _${COMPONENT_NAME}_sources.
 set(_${COMPONENT_NAME}_sources
     module.cc
+    EvaluatorBondActive.h
+    ActiveBond.h
+    ActiveBondGPU.h
     )
 
 # TODO: List all GPU C++ source code files in _${COMPONENT_NAME}_cu_sources.
 set(_${COMPONENT_NAME}_cu_sources
-    PotentialPairExampleGPUKernel.cu
+    ActiveBondGPU.cuh
+    ActiveBondGPUKernel.cu
     )
 
 # TODO: List all Python modules in python_files.
 set(python_files
     __init__.py
     pair.py
+    bond.py
     version.py
     )
 
@@ -39,6 +44,15 @@ target_link_libraries(_${COMPONENT_NAME}
                       PUBLIC HOOMD::_hoomd
                       PUBLIC HOOMD::_md
                       )
+
+
+
+# target_include_directories(_${COMPONENT_NAME} PUBLIC
+#     # This line ensures all HOOMD C++ headers are found
+#     ${HOOMD_INSTALL_ROOT}/include
+# )
+
+
 
 # Install the library.
 install(TARGETS _${COMPONENT_NAME}
