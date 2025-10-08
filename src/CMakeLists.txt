@@ -7,12 +7,14 @@ set(_${COMPONENT_NAME}_sources
     EvaluatorBondActive.h
     ActiveBond.h
     ActiveBondGPU.h
+    EvaluatorPairShiftedLJ.h
     )
 
 # TODO: List all GPU C++ source code files in _${COMPONENT_NAME}_cu_sources.
 set(_${COMPONENT_NAME}_cu_sources
     ActiveBondGPU.cuh
     ActiveBondGPUKernel.cu
+    PotentialPairShiftedLJGPUkernel.cu
     )
 
 # TODO: List all Python modules in python_files.

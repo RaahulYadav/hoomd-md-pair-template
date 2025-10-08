@@ -7,6 +7,7 @@
 from . import version
 from .pair import ExamplePair
 from .bond import ActiveBond
+from .pair import ShiftedLJ
 
 # ...
-__all__ = ['ExamplePair', 'ActiveBond'] # Add 'ActiveBond'
+__all__ = ['ExamplePair', 'ActiveBond','ShiftedLJ'] # Add 'ActiveBond'

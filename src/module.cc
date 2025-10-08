@@ -40,10 +40,13 @@
 // ... (includes)
 #include "EvaluatorBondActive.h"
 #include "ActiveBond.h"
+#include "EvaluatorPairShiftedLJ.h"
+#include "hoomd/md/PotentialPair.h"
 #include <pybind11/pybind11.h>
 
 #ifdef ENABLE_HIP
 #include "ActiveBondGPU.h"
+#include "hoomd/md/PotentialPairGPU.h"
 #endif
 
 namespace hoomd
@@ -56,9 +59,12 @@ PYBIND11_MODULE(_active, m) // <<< Changed from _template to _active
     {
     // REMOVED the old export_PotentialPair lines
     detail::export_ActiveBond<EvaluatorBondActive>(m, "ActiveBond");
+    detail::export_PotentialPair<EvaluatorPairShiftedLJ>(m, "ShiftedLJ");
 #ifdef ENABLE_HIP
     // REMOVED the old export_PotentialPairGPU lines
     detail::export_ActiveBondGPU<EvaluatorBondActive>(m, "ActiveBondGPU");
+    detail::export_PotentialPairGPU<EvaluatorPairShiftedLJ>(m, "ShiftedLJGPU");
+
 #endif
     }
 
