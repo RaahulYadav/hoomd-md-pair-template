@@ -1,9 +1,8 @@
 // Copyright (c) 2009-2025 The Regents of the University of Michigan.
 // Part of HOOMD-blue, released under the BSD 3-Clause License.
 
-#include "hoomd/ForceCompute.h"
+#include "hoomd/md/MeshForceCompute.h"
 #include "hoomd/GPUArray.h"
-#include "hoomd/MeshDefinition.h"
 #include <memory>
 
 #include <vector>
@@ -29,7 +28,7 @@ namespace md
 
     \ingroup computes
 */
-template<class evaluator, class Bonds> class ActiveBond : public ForceCompute
+template<class evaluator, class Bonds> class ActiveBond : public MeshForceCompute
     {
     public:
     //! Param type from evaluator
@@ -70,7 +69,7 @@ template<class evaluator, class Bonds> class ActiveBond : public ForceCompute
 
 template<class evaluator, class Bonds>
 ActiveBond<evaluator, Bonds>::ActiveBond(std::shared_ptr<SystemDefinition> sysdef)
-    : ForceCompute(sysdef)
+    : MeshForceCompute(sysdef, NULL)
     {
     m_exec_conf->msg->notice(5) << "Constructing ActiveBond<" << evaluator::getName() << ">"
                                 << std::endl;
@@ -87,7 +86,7 @@ ActiveBond<evaluator, Bonds>::ActiveBond(std::shared_ptr<SystemDefinition> sysde
 template<class evaluator, class Bonds>
 ActiveBond<evaluator, Bonds>::ActiveBond(std::shared_ptr<SystemDefinition> sysdef,
                                                std::shared_ptr<MeshDefinition> meshdef)
-    : ForceCompute(sysdef)
+    : MeshForceCompute(sysdef, meshdef)
     {
     m_exec_conf->msg->notice(5) << "Constructing PotentialMeshBond<" << evaluator::getName() << ">"
                                 << std::endl;
@@ -293,7 +292,7 @@ CommFlags ActiveBond<evaluator, Bonds>::getRequestedCommFlags(uint64_t timestep)
     if (evaluator::needsCharge())
         flags[comm_flag::charge] = 1;
 
-    flags |= ForceCompute::getRequestedCommFlags(timestep);
+    flags |= MeshForceCompute::getRequestedCommFlags(timestep);
 
     return flags;
     }
@@ -308,7 +307,7 @@ namespace detail
 template<class T> void export_ActiveBond(pybind11::module& m, const std::string& name)
     {
     pybind11::class_<ActiveBond<T, BondData>,
-                     ForceCompute,
+                     MeshForceCompute,
                      std::shared_ptr<ActiveBond<T, BondData>>>(m, name.c_str())
         .def(pybind11::init<std::shared_ptr<SystemDefinition>>())
         .def("setParams", &ActiveBond<T, BondData>::setParamsPython)
@@ -322,7 +321,7 @@ template<class T> void export_ActiveBond(pybind11::module& m, const std::string&
 template<class T> void export_PotentialMeshBond(pybind11::module& m, const std::string& name)
     {
     pybind11::class_<ActiveBond<T, MeshBondData>,
-                     ForceCompute,
+                     MeshForceCompute,
                      std::shared_ptr<ActiveBond<T, MeshBondData>>>(m, name.c_str())
         .def(pybind11::init<std::shared_ptr<SystemDefinition>, std::shared_ptr<MeshDefinition>>())
         .def("setParams", &ActiveBond<T, MeshBondData>::setParamsPython)
