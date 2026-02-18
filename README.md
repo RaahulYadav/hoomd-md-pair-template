@@ -16,11 +16,11 @@ To build this component:
     ```
 3. Configure.
     ```
-    $ cmake -B build/hoomd-md-pair-template -S hoomd-md-pair-template -j${nproc}
+    $ cmake -B build/hoomd-md-pair-template -S hoomd-md-pair-template
     ```
 4. Build the component.
     ```
-    $ cmake --build build/hoomd-md-pair-template
+    $ cmake --build build/hoomd-md-pair-template -j${nproc}
     ```
 5. Install the component.
     ```
