@@ -9,6 +9,7 @@ from hoomd.data.typeparam import TypeParameter
 
 # Import the hoomd Python package and other necessary components.
 from hoomd.md import pair
+from hoomd.md.pair.friction import FrictionalPair
 from hoomd.active import _active
 
 
@@ -102,3 +103,46 @@ class ShiftedLJ(pair.Pair):
         )
         self._add_typeparam(params)
         # self._param_dict.update(ParameterDict(tail_correction=bool(tail_correction)))
+class FrictionLJShiftedLinear(FrictionalPair):
+    r"""Linear frictional model pair force with the Shifted LJ conservative force.
+
+    Args:
+        nlist (hoomd.md.nlist.NeighborList): Neighbor list
+        default_r_cut (float): Default cutoff radius :math:`[\mathrm{length}]`.
+        default_r_on (float): Default turn-on radius :math:`[\mathrm{length}]`.
+        mode (str): Energy shifting/smoothing mode.
+
+    `FrictionLJShiftedLinear` computes the frictional interaction
+    between pairs of particles with a linear friction model and a shifted
+    Lennard-Jones conservative force.
+
+    The conservative potential is:
+    .. math::
+        V(r) = 4 \varepsilon \left[ \left( \frac{\sigma}{r - r_0} \right)^{12} - \left( \frac{\sigma}{r - r_0} \right)^{6} \right]
+
+    for :math:`r > r_0`.
+
+    The friction model is Linear:
+    .. math::
+        f_\mathrm{l}(u,r) = \gamma_\mathrm{f}u
+
+    """
+
+    _cpp_class_name = "FrictionLJShiftedLinear"
+    _ext_module = _active
+
+    def __init__(self, nlist, default_r_cut=None, default_r_on=0.0, mode="none"):
+        super().__init__(nlist, default_r_cut, mode)
+        params = TypeParameter(
+            "params",
+            "particle_types",
+            TypeParameterDict(
+                epsilon=float, 
+                sigma=float, 
+                gamma_f=float, 
+                r_shift=float, 
+                kT=float, 
+                len_keys=2
+            ),
+        )
+        self._add_typeparam(params)

@@ -8,6 +8,8 @@ from . import version
 from .pair import ExamplePair
 from .bond import ActiveBond
 from .pair import ShiftedLJ
+from .pair import FrictionLJShiftedLinear
+from .methods import BrownianModified
 
 # ...
-__all__ = ['ExamplePair', 'ActiveBond','ShiftedLJ'] # Add 'ActiveBond'
+__all__ = ['ExamplePair', 'ActiveBond','ShiftedLJ', 'FrictionLJShiftedLinear', 'BrownianModified'] # Add 'ActiveBond'

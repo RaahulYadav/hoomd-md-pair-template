@@ -8,6 +8,12 @@ set(_${COMPONENT_NAME}_sources
     ActiveBond.h
     ActiveBondGPU.h
     EvaluatorPairShiftedLJ.h
+    EvaluatorPairFrictionLJShiftedBase.h
+    EvaluatorPairFrictionLJShifted.h
+    TwoStepBDModified.cc
+    TwoStepBDModified.h
+    TwoStepBDModifiedGPU.cc
+    TwoStepBDModifiedGPU.h
     )
 
 # TODO: List all GPU C++ source code files in _${COMPONENT_NAME}_cu_sources.
@@ -15,6 +21,9 @@ set(_${COMPONENT_NAME}_cu_sources
     ActiveBondGPU.cuh
     ActiveBondGPUKernel.cu
     PotentialPairShiftedLJGPUkernel.cu
+    EvaluatorPairFrictionLJShiftedGPUKernel.cu
+    TwoStepBDModifiedGPU.cu
+    TwoStepBDModifiedGPU.cuh
     )
 
 # TODO: List all Python modules in python_files.
@@ -22,6 +31,7 @@ set(python_files
     __init__.py
     pair.py
     bond.py
+    methods.py
     version.py
     )
 

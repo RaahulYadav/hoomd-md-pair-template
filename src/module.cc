@@ -35,24 +35,50 @@
 //     } // end namespace md
 //     } // end namespace hoomd
 
-
-
 // ... (includes)
-#include "EvaluatorBondActive.h"
 #include "ActiveBond.h"
+#include "EvaluatorBondActive.h"
+#include "EvaluatorPairFrictionLJShifted.h"
 #include "EvaluatorPairShiftedLJ.h"
+#include "hoomd/md/FrictionPair.h"
 #include "hoomd/md/PotentialPair.h"
+#include "TwoStepBDModified.h"
 #include <pybind11/pybind11.h>
 
 #ifdef ENABLE_HIP
 #include "ActiveBondGPU.h"
+#include "hoomd/md/FrictionPairGPU.h"
 #include "hoomd/md/PotentialPairGPU.h"
+#include "TwoStepBDModifiedGPU.h"
 #endif
 
 namespace hoomd
     {
-    namespace md
+namespace md
     {
+
+// Define the export functions (you can also do this in the .cc files)
+void export_TwoStepBDModified(pybind11::module& m)
+    {
+    pybind11::class_<TwoStepBDModified, TwoStepLangevinBase, std::shared_ptr<TwoStepBDModified>>(m, "TwoStepBDModified")
+        .def(pybind11::init<std::shared_ptr<SystemDefinition>,
+                            std::shared_ptr<ParticleGroup>,
+                            std::shared_ptr<Variant>,
+                            bool,
+                            bool>());
+    }
+
+#ifdef ENABLE_HIP
+void export_TwoStepBDModifiedGPU(pybind11::module& m)
+    {
+    pybind11::class_<TwoStepBDModifiedGPU, TwoStepBDModified, std::shared_ptr<TwoStepBDModifiedGPU>>(m, "TwoStepBDModifiedGPU")
+        .def(pybind11::init<std::shared_ptr<SystemDefinition>,
+                            std::shared_ptr<ParticleGroup>,
+                            std::shared_ptr<Variant>,
+                            bool,
+                            bool>());
+    }
+#endif
 
 // Set the name of the python module to match ${COMPONENT_NAME}
 PYBIND11_MODULE(_active, m) // <<< Changed from _template to _active
@@ -60,10 +86,22 @@ PYBIND11_MODULE(_active, m) // <<< Changed from _template to _active
     // REMOVED the old export_PotentialPair lines
     detail::export_ActiveBond<EvaluatorBondActive>(m, "ActiveBond");
     detail::export_PotentialPair<EvaluatorPairShiftedLJ>(m, "ShiftedLJ");
+    detail::export_FrictionPair<EvaluatorPairFrictionLJShiftedLinear>(m, "FrictionLJShiftedLinear");
+
+
+    export_TwoStepBDModified(m);
+#ifdef ENABLE_HIP
+    export_TwoStepBDModifiedGPU(m);
+#endif
+
+
 #ifdef ENABLE_HIP
     // REMOVED the old export_PotentialPairGPU lines
     detail::export_ActiveBondGPU<EvaluatorBondActive>(m, "ActiveBondGPU");
     detail::export_PotentialPairGPU<EvaluatorPairShiftedLJ>(m, "ShiftedLJGPU");
+    detail::export_FrictionPairGPU<EvaluatorPairFrictionLJShiftedLinear>(
+        m,
+        "FrictionLJShiftedLinearGPU");
 
 #endif
     }
