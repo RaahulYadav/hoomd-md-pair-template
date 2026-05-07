@@ -62,7 +62,7 @@ jobs:
     steps:
     - name: Restore cached HOOMD-blue build
       id: cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: install
         key: hoomd-blue-${{ env.HOOMD_BLUE_VERSION }}-${{ matrix.enable_mpi }}-gpu-${{ matrix.enable_gpu }}
@@ -71,14 +71,14 @@ jobs:
         apt-get update
         apt-get install git --yes
     - name: Checkout HOOMD-blue
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: glotzerlab/hoomd-blue
         path: hoomd-blue
         submodules: true
         ref: ${{ env.HOOMD_BLUE_VERSION }}
     - name: Create Python Environment
-      uses: mamba-org/setup-micromamba@v2
+      uses: mamba-org/setup-micromamba@v3
       with:
         environment-name: test
         environment-file: hoomd-blue/.github/workflows/environments/py312-conda-lock.yml
@@ -112,13 +112,13 @@ jobs:
       working-directory: build-hoomd-blue
     - name: Cache HOOMD-blue build
       if: steps.cache.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       with:
         path: install
         key: hoomd-blue-${{ env.HOOMD_BLUE_VERSION }}-${{ matrix.enable_mpi }}-gpu-${{ matrix.enable_gpu }}
 
     - name: Checkout component
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         path: component
     - name: Configure component
